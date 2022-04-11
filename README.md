@@ -1,38 +1,37 @@
 
  # ScreenShare_FlutterToolKit
 
-The sample Flutter App demonstrates the use of EnableX (https://www.enablex.io/cpaas/video-api) platform Server APIs and Flutter Toolkit to build 1-to-1 RTC (Real Time Communication) Application. It allows developers to ramp up on app development by hosting on their own devices.
+The sample Flutter App demonstrates the use of [EnableX platform Server APIs](https://www.enablex.io/developer/video-api/server-api) and [Flutter Toolkit](https://www.enablex.io/developer/video-api/client-api/flutter-toolkit/) to build 1-to-1 RTC (Real-Time Communication) Application. It allows developers to ramp up on app development by hosting on their own devices.
 
-This App creates a virtual Room on the fly hosted on the Enablex platform using REST calls and uses the Room credentials (i.e. Room Id) to connect to the virtual Room as a Moderator or Participant using a mobile client. The same Room credentials can be shared with others to join the same virtual Room to carry out a RTC (Real Time Communication) session.
+This App creates a virtual Room on the fly hosted on the Enablex platform using REST calls and uses the Room credentials (i.e. Room Id) to connect to the virtual Room as a Moderator or Participant using a mobile client. The same Room credentials can be shared with others to join the same virtual Room to carry out an RTC (Real-Time Communication) session.
 
 EnableX Developer Center: https://developer.enablex.io/
 
 ## 1. How to get started
 
-### 1.1 Pre-Requisites
+### 1.1 Prerequisites
 
 #### 1.1.1 App Id and App Key
 
 * Register with EnableX [https://portal.enablex.io/cpaas/trial-sign-up/] 
-* Login to the EnableX Portal
-* Create your Application Key
-* Get your App ID and App Key delivered to your Email
+* Create your Application
+* Get your App ID and App Key delivered to your email
 
 
 
 #### 1.1.2 Sample Flutter Client
 
-* Clone or download this Repository [https://github.com/vcloudx-infotech/ScreenShare_FlutterToolKit.git] 
+* [Clone or download this Repository](https://github.com/EnableX/Sample-Flutter-Video-Chat-Application-With-Screen-Share.git)
 
 #### 1.1.3 Test Application Server
 
-You need to setup an Application Server to provision Web Service API for your Flutter Application to communicate enabling Video Session.
+You need to setup an Application Server to provision Web Service API for your Flutter Application to enable Video Session.
 
-To help you to try our Flutter Application quickly, without having to setup Applciation Server, this Application is shipped pre-configured to work in a "try" mode with EnableX hosted Application Server i.e. https://demo.enablex.io.
+To help you to try our Flutter Application quickly, without having to set up Application Server, this Application is shipped pre-configured to work in a "try" mode with EnableX hosted Application Server i.e. https://demo.enablex.io.
 
-Our Application Server restricts a single Session Duation to 10 minutes, and allows 1 moderator and note more than 1 Participant in a Session.
+Our Application Server restricts a single Session Duations to 10 minutes, and allows 1 moderator and not more than 1 participant in a Session.
 
-Once you tried EnableX flutter Sample Application, you may need to setup your own  Application Server and verify your Application to work with your Application Server.  More on this, read Point 2 later in the Document.
+Once you tried EnableX flutter Sample Application, you may need to set up your own  Application Server and verify your Application to work with your Application Server.  Refer to point 2 for more details on this.
 
 
 #### 1.1.4 Configure Flutter Client
@@ -61,50 +60,50 @@ Note: The distributable comes with demo username and password for the Service.
 
 * Open the App in your Device. You get a form to enter Credentials i.e. Name & Room Id.
 * You need to create a Room by clicking the "Create Room" button.
-* Once the Room Id is created, you can use it and share with others to connect to the Virtual Room to carry out a RTC Session either as a Moderator or a Participant (Choose applicable Role in the Form).
+* Once the Room Id is created, you can use it and share with others to connect to the Virtual Room to carry out an RTC Session either as a Moderator or a Participant (Choose applicable Role in the Form).
 
-Note: Only one user with Moderator Role allowed to connect to a Virtual Room while trying with EnableX Hosted Service. Your Own Application Server may allow upto 5 Moderators.
+Note: Only one user with Moderator Role allowed to connect to a Virtual Room while trying with EnableX Hosted Service. Your Own Application Server can allow upto 5 Moderators.
 
-Note:- If you used any emulator/simulator your local stream will not create. It will create only on real device.
+Note:- In case of emulator/simulator your local stream will not create. It will create only on real device.
 
-## 2 Setup Your Own Application Server
+## 2. Set up Your Own Application Server
 
-You may need to setup your own Application Server after you tried the Sample Application with EnableX hosted Server. We have differnt variant of Appliciation Server Sample Code, pick one in your preferred language and follow instructions given in respective README.md file.
+You may need to setup your own Application Server after you tried the Sample Application with EnableX hosted Server. We have differnt variants of Application Server Sample Code. Pick the one in your preferred language and follow instructions given in respective README.md file.
 
-*NodeJS: [https://github.com/EnableX/Video-Conferencing-Open-Source-Web-Application-Sample.git]
-*PHP: [https://github.com/EnableX/Group-Video-Call-Conferencing-Sample-Application-in-PHP]
+* NodeJS: [https://github.com/EnableX/Video-Conferencing-Open-Source-Web-Application-Sample.git]
+* PHP: [https://github.com/EnableX/Group-Video-Call-Conferencing-Sample-Application-in-PHP]
 
 Note the following:
 
 * You need to use App ID and App Key to run this Service.
-* Your Flutter Client End Point needs to connect to this Service to create Virtual Room and Create Token to join session.
-* Application Server is created using EnableX Server API, a Rest API Service helps in provisioning, session access and pos-session reporting.
+* Your Flutter Client EndPoint needs to connect to this Service to create Virtual Room and Create Token to join the session.
+* Application Server is created using EnableX Server API while Rest API Service helps in provisioning, session access and post-session reporting.
 
 To know more about Server API, go to:
-https://developer.enablex.io/latest/server-api/
+https://www.enablex.io/developer/video-api/server-api
 
 
 
-## 3 Flutter Toolkit
+## 3. Flutter Toolkit
+https://www.enablex.io/developer/video-api/client-api/flutter-toolkit/
+   
 
-
-
-## 4 Application Walk-through
+## 4. Application Walk-through
 
 ### 4.1 Create Token
 
 We create a Token for a Room Id to get connected to EnableX Platform to connect to the Virtual Room to carry out a RTC Session.
 
 To create Token, we make use of Server API. Refer following documentation:
-https://developer.enablex.io/latest/server-api/rooms-route/#create-token
+https://www.enablex.io/developer/video-api/server-api/rooms-route/#create-token
 
 
 ### 4.2 Connect to a Room, Initiate & Publish Stream
 
 We use the Token to get connected to the Virtual Room. Once connected, we initiate local stream and publish into the room. Refer following documentation for this process:
+https://www.enablex.io/developer/video-api/client-api/flutter-toolkit/room-connection/
 
-
-### 4.3 To start screen share with enableX flutter plugin in flutter  iOS and android App 
+### 4.3 To start screen share with enableX flutter plugin in flutter  IOS and android App 
   user need to add some required dependency in pubspec.yaml
 
    enx_flutter_plugin
@@ -113,7 +112,7 @@ We use the Token to get connected to the Virtual Room. Once connected, we initia
    flutter_foreground_task
    ![GitHub Logo](/images/pubspec.png)
    
-# For iOS
+# For IOS
 
 
 replay_kit_launcher will help to open RPSystemBroadcastPickerView in flutter iOS app.
