@@ -127,7 +127,7 @@ How to add BroadcastExtenssion
 
 Open your flutter project's iOS native workspace (Runner.xcworkspace),
 select Xcode -> File -> New -> Target and create a new Broadcast Upload Extension target.
-![GitHub Logo](/images/broadcast.png)
+![GitHub Logo](/images/broadcast.png) <br/>
 ![GitHub Logo](/images/broadcastDetails.png)
 
 [After adding broadcast extension make sure you have added a correct bundle id for your broadcast extension and your app.]
