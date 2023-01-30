@@ -125,8 +125,8 @@ class _State extends State<MyApp> {
 
   Future<String> createRoom() async {
     var response = await http.post(
-        Uri.encodeFull(
-            kBaseURL + "createRoom"), // replace FQDN with Your Server API URL
+        Uri.parse(
+            "${kBaseURL}createRoom"), // replace FQDN with Your Server API URL
         headers: header);
     if (response.statusCode == 200) {
       Map<String, dynamic> user = jsonDecode(response.body);
@@ -139,7 +139,6 @@ class _State extends State<MyApp> {
       throw Exception('Failed to load post');
     }
   }
-
   Future<String> createToken() async {
     var value = {
       'user_ref': "2236",
@@ -149,8 +148,8 @@ class _State extends State<MyApp> {
     };
     print(jsonEncode(value));
     var response = await http.post(
-        Uri.encodeFull(
-            kBaseURL + "createToken"), // replace FQDN with Your Server API URL
+        Uri.parse(
+            "${kBaseURL}createToken"), // replace FQDN with Your Server API URL
         headers: header,
         body: jsonEncode(value));
 
@@ -165,7 +164,6 @@ class _State extends State<MyApp> {
       throw Exception('Failed to load post');
     }
   }
-
   TextStyle style = TextStyle(fontFamily: 'Montserrat', fontSize: 16.0);
 
   bool isValidated = false;
