@@ -26,7 +26,6 @@ class MyConfApp extends StatefulWidget {
 }
 
 class Conference extends State<MyConfApp> {
-  static const platformChannel = const MethodChannel('screen_share_data');
   bool isAudioMuted = false;
   bool isVideoMuted = false;
   bool isScreenShare=false;
@@ -86,11 +85,7 @@ class Conference extends State<MyConfApp> {
       setState(() {
         print('onPublishedStream' + jsonEncode(map));
         EnxRtc.setupVideo(0, 0, true, 300, 200);
-        platformChannel.invokeMethod('screen_share', {
-          'streamId': map['streamId'],
-          'roomId': 1234,
-
-        });
+      
       });
     };
     print('here 6');
