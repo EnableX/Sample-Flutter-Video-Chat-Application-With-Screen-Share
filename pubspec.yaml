@@ -27,12 +27,12 @@ dependencies:
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^0.1.3
-  enx_flutter_plugin: ^2.2.7
+  cupertino_icons: ^1.0.6
+  enx_flutter_plugin: ^2.3.2
   replay_kit_launcher: ^0.3.0
   shared_preference_app_group: 0.3.0
   flutter_foreground_task: ^3.5.2
-  fluttertoast: ^3.1.3
+  fluttertoast: ^8.2.2
 
     # When depending on this package from a real application you should use:
     #   enx_flutter_plugin: ^x.y.z
@@ -46,7 +46,7 @@ dev_dependencies:
     sdk: flutter
 
   http: any
-  permission_handler: ^3.0.0
+  permission_handler: ^8.3.0
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
