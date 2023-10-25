@@ -1,11 +1,12 @@
+# EnableX Flutter Toolkit: Building a Real-Time Communication App with Screen Sharing
 
- # ScreenShare_FlutterToolKit
+Build a 1-to-1 RTC App with Flutter Toolkit and EnableX Video APIs
 
-The sample Flutter App demonstrates the use of [EnableX platform Server APIs](https://www.enablex.io/developer/video-api/server-api) and Flutter Toolkit to build 1-to-1 RTC (Real-Time Communication) Application. It allows developers to ramp up on app development by hosting on their own devices.
+Explore this Flutter sample app showcasing real-time communication (RTC) using EnableX platform Video APIs and Flutter Toolkit. It's perfect for developers looking to kickstart app development on their devices.
 
-This App creates a virtual Room on the fly hosted on the Enablex platform using REST calls and uses the Room credentials (i.e. Room Id) to connect to the virtual Room as a Moderator or Participant using a mobile client. The same Room credentials can be shared with others to join the same virtual Room to carry out an RTC (Real-Time Communication) session.
+This app dynamically creates virtual rooms on the EnableX platform through REST calls, obtaining Room credentials like Room ID. These credentials allow users to connect as Moderators or Participants via their mobile devices. Share the same credentials with others for collaborative RTC sessions.
 
-EnableX Developer Center: https://developer.enablex.io/
+Visit the EnableX Developer Center at https://developer.enablex.io/ for more information.
 
 ## 1. How to get started
 
