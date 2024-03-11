@@ -1,0 +1,84 @@
+PODS:
+  - EnablexWebRTC (1.0.2)
+  - enx_flutter_plugin (2.3.13):
+    - EnxRTCiOS (= 2.3.16)
+    - Flutter
+    - Socket.IO-Client-Swift (~> 15.2.0)
+  - EnxRTCiOS (2.3.16):
+    - EnablexWebRTC (= 1.0.2)
+  - Flutter (1.0.0)
+  - flutter_foreground_task (0.0.1):
+    - Flutter
+  - fluttertoast (0.0.2):
+    - Flutter
+    - Toast
+  - permission_handler_apple (9.3.0):
+    - Flutter
+  - replay_kit_launcher (1.0.0):
+    - Flutter
+  - shared_preference_app_group (1.0.0):
+    - Flutter
+  - shared_preferences_foundation (0.0.1):
+    - Flutter
+    - FlutterMacOS
+  - Socket.IO-Client-Swift (15.2.0):
+    - Starscream (~> 3.1)
+  - Starscream (3.1.1)
+  - Toast (4.1.0)
+
+DEPENDENCIES:
+  - enx_flutter_plugin (from `.symlinks/plugins/enx_flutter_plugin/ios`)
+  - EnxRTCiOS
+  - Flutter (from `Flutter`)
+  - flutter_foreground_task (from `.symlinks/plugins/flutter_foreground_task/ios`)
+  - fluttertoast (from `.symlinks/plugins/fluttertoast/ios`)
+  - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
+  - replay_kit_launcher (from `.symlinks/plugins/replay_kit_launcher/ios`)
+  - shared_preference_app_group (from `.symlinks/plugins/shared_preference_app_group/ios`)
+  - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
+  - Socket.IO-Client-Swift (~> 15.2.0)
+
+SPEC REPOS:
+  trunk:
+    - EnablexWebRTC
+    - EnxRTCiOS
+    - Socket.IO-Client-Swift
+    - Starscream
+    - Toast
+
+EXTERNAL SOURCES:
+  enx_flutter_plugin:
+    :path: ".symlinks/plugins/enx_flutter_plugin/ios"
+  Flutter:
+    :path: Flutter
+  flutter_foreground_task:
+    :path: ".symlinks/plugins/flutter_foreground_task/ios"
+  fluttertoast:
+    :path: ".symlinks/plugins/fluttertoast/ios"
+  permission_handler_apple:
+    :path: ".symlinks/plugins/permission_handler_apple/ios"
+  replay_kit_launcher:
+    :path: ".symlinks/plugins/replay_kit_launcher/ios"
+  shared_preference_app_group:
+    :path: ".symlinks/plugins/shared_preference_app_group/ios"
+  shared_preferences_foundation:
+    :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
+
+SPEC CHECKSUMS:
+  EnablexWebRTC: 05f0d79eb6f133f1b844af9a2b7530dc7c6e2108
+  enx_flutter_plugin: e0b2f6680ac6ef8b08e78dcf5dcc78f3d83f39da
+  EnxRTCiOS: 3514b911aae6272f4391387ec0af3993dbaa0f91
+  Flutter: e0871f40cf51350855a761d2e70bf5af5b9b5de7
+  flutter_foreground_task: 21ef182ab0a29a3005cc72cd70e5f45cb7f7f817
+  fluttertoast: 31b00dabfa7fb7bacd9e7dbee580d7a2ff4bf265
+  permission_handler_apple: 036b856153a2b1f61f21030ff725f3e6fece2b78
+  replay_kit_launcher: 828739da18c9785d5e9aafd4f075ea11d6b61499
+  shared_preference_app_group: 83d2284f9e747839c40fc281403b5b60d83e2989
+  shared_preferences_foundation: b4c3b4cddf1c21f02770737f147a3f5da9d39695
+  Socket.IO-Client-Swift: 1e3e3a1f09f3312a167f0d781eb2f383d477357c
+  Starscream: 4bb2f9942274833f7b4d296a55504dcfc7edb7b0
+  Toast: ec33c32b8688982cecc6348adeae667c1b9938da
+
+PODFILE CHECKSUM: a5d5638761664ed22d6f96cb9b11525f11da16cc
+
+COCOAPODS: 1.14.3

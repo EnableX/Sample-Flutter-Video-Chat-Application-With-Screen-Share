@@ -2,17 +2,14 @@
 //  SampleHandler.m
 //  BroadCastExtension
 //
-//  Created by jaykumar on 15/12/21.
+//  Created by jaykumar on 11/03/24.
 //
 
 
 #import "SampleHandler.h"
-#import "VCXShareScreen.h"
 
 @interface SampleHandler ()
-
 @property(nonatomic,strong)VCXShareScreen *screenShare;
-
 @end
 
 @implementation SampleHandler
@@ -24,8 +21,9 @@
     }
     return self;
 }
+
 - (void)broadcastStartedWithSetupInfo:(NSDictionary<NSString *,NSObject *> *)setupInfo {
-    // User has requested to start the broadcast. Setup info from the UI extension can be supplied but optional.
+    // User has requested to start the broadcast. Setup info from the UI extension can be supplied but optional. 
     [[NSNotificationCenter defaultCenter] removeObserver:self];
     [[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(finishedBroadCast:) name:@"Disconnect" object:nil];
 }
@@ -50,8 +48,8 @@
     
     switch (sampleBufferType) {
         case RPSampleBufferTypeVideo:
-            [self.screenShare processBufferScreen:sampleBuffer];
             // Handle video sample buffer
+            [self.screenShare processBufferScreen:sampleBuffer];
             break;
         case RPSampleBufferTypeAudioApp:
             // Handle audio sample buffer for app audio

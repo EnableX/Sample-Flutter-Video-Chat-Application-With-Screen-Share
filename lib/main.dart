@@ -50,8 +50,8 @@ class _MyHomePageState extends State<MyHomePage> {
   static bool kTry = true;
   /*Use enablec portal to create your app and get these following credentials*/
 
-  static const String kAppId = "app-id";
-  static const String kAppkey = "app-key";
+  static const String kAppId = "app_id";
+  static const String kAppkey = "app_key";
 
   var header = (kTry)
       ? {
