@@ -2,59 +2,92 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'dart:async';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'video_call.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'permission_service.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:screen_share_sample/video_call.dart';
 void main() {
-  runApp(MaterialApp(
-    debugShowCheckedModeBanner: false,
-    title: "Sample App",
-    theme: ThemeData(
-        brightness: Brightness.light,
-        primaryColor: Colors.deepPurple,
-        accentColor: Colors.pinkAccent),
-    home: MyApp(),
-    routes: <String, WidgetBuilder>{
-      '/Conference': (context) => MyConfApp(
-            token: _State.token,
-          )
-    },
-  ));
+  runApp(const MyApp());
 }
 
-class MyApp extends StatefulWidget {
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  // This widget is the root of your application.
   @override
-  _State createState() => _State();
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        useMaterial3: true,
+      ),
+      home: const MyHomePage(),
+      routes: <String, WidgetBuilder>{
+        '/Conference': (context) => MyConfApp(
+          token: _MyHomePageState.token,
+        )
+      },
+    );
+  }
 }
 
-class _State extends State<MyApp> {
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({super.key});
+
+
+
+
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
   /*Your webservice host URL, Keet the defined host when kTry = true */
-  static final String kBaseURL = "https://demo.enablex.io/";
+  static const String kBaseURL = "https://demo.enablex.io/";
   /* To try the app with Enablex hosted service you need to set the kTry = true */
   static bool kTry = true;
   /*Use enablec portal to create your app and get these following credentials*/
 
-  static final String kAppId = "App-ID";
-  static final String kAppkey = "App-Key";
+  static const String kAppId = "app-id";
+  static const String kAppkey = "app-key";
 
   var header = (kTry)
       ? {
-          "x-app-id": kAppId,
-          "x-app-key": kAppkey,
-          "Content-Type": "application/json"
-        }
+    "x-app-id": kAppId,
+    "x-app-key": kAppkey,
+    "Content-Type": "application/json"
+  }
       : {"Content-Type": "application/json"};
 
   TextEditingController nameController = TextEditingController();
   TextEditingController roomIdController = TextEditingController();
   static String token = "";
+  Future<void> _handleCameraAndMic() async {
 
+
+
+// You can request multiple permissions at once.
+    Map<Permission, PermissionStatus> statuses = await [
+      Permission.camera,
+      Permission.microphone,
+      Permission.storage,
+    ].request();
+
+  }
   Future<void> createRoomvalidations() async {
     if (nameController.text.isEmpty) {
       isValidated = false;
+      Fluttertoast.showToast(
+          msg: "This is Center Short Toast",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.CENTER,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0
+      );
       Fluttertoast.showToast(
           msg: "Please Enter your name",
           toastLength: Toast.LENGTH_SHORT,
@@ -66,28 +99,6 @@ class _State extends State<MyApp> {
       isValidated = true;
     }
   }
-
-  Future<void> _handleCameraAndMic() async {
-    await PermissionHandler().requestPermissions(
-      [
-        PermissionGroup.camera,
-        PermissionGroup.microphone,
-        PermissionGroup.storage
-      ],
-    );
-  }
-
-  Future<void> permissionAccess() async {
-    var result =
-        await PermissionService().requestPermission(onPermissionDenied: () {
-//      print('Permission has been denied');
-    });
-
-    if (result) {
-      joinRoomValidations();
-    }
-  }
-
   Future<void> joinRoomValidations() async {
     // await _handleCameraAndMic();
     if (permissionError) {
@@ -186,7 +197,7 @@ class _State extends State<MyApp> {
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Username",
           border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+          OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
     final roomIdField = TextField(
       obscureText: false,
@@ -196,7 +207,7 @@ class _State extends State<MyApp> {
           contentPadding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
           hintText: "Room Id",
           border:
-              OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
+          OutlineInputBorder(borderRadius: BorderRadius.circular(32.0))),
     );
     final createRoomButon = Material(
       elevation: 5.0,
@@ -228,7 +239,7 @@ class _State extends State<MyApp> {
         // minWidth: MediaQuery.of(context).size.width / 2,
         padding: EdgeInsets.fromLTRB(20.0, 15.0, 20.0, 15.0),
         onPressed: () {
-          permissionAccess();
+
           joinRoomValidations();
           if (isValidated) {
             createToken();
@@ -293,3 +304,5 @@ class _State extends State<MyApp> {
             )));
   }
 }
+
+

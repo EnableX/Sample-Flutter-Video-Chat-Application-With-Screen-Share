@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/modules/Sample-Flutter-Video-Chat-Application-With-Screen-Share.iml" filepath="$PROJECT_DIR$/.idea/modules/Sample-Flutter-Video-Chat-Application-With-Screen-Share.iml" />
+      <module fileurl="file://$PROJECT_DIR$/screen_share_sample.iml" filepath="$PROJECT_DIR$/screen_share_sample.iml" />
     </modules>
   </component>
 </project>

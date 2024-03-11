@@ -18,7 +18,7 @@ import 'package:replay_kit_launcher/replay_kit_launcher.dart';
 import 'package:shared_preference_app_group/shared_preference_app_group.dart';
 
 class MyConfApp extends StatefulWidget {
-  MyConfApp({this.token});
+  MyConfApp({required this.token});
   final String token;
 
   @override
@@ -29,9 +29,11 @@ class Conference extends State<MyConfApp> {
   bool isAudioMuted = false;
   bool isVideoMuted = false;
   bool isScreenShare=false;
-  String streamId,roomId;
-   String roomID;
-   String clientID;
+ late String streamId;
+ late String shareStreamId;
+  late String roomId;
+  late String roomID;
+  late String clientID;
   @override
   void initState() {
     super.initState();
@@ -62,7 +64,7 @@ class Conference extends State<MyConfApp> {
       'videoSize': map2
     };
     print('here 2');
-    await EnxRtc.joinRoom(widget.token, map1, null, null);
+    await EnxRtc.joinRoom(widget.token, map1, {}, []);
     print('here 3');
   }
 
@@ -179,7 +181,10 @@ class Conference extends State<MyConfApp> {
     };
     //
     EnxRtc.onStartScreenShareACK=(Map<dynamic, dynamic> map){
-      isScreenShare=true;
+      setState(() {
+        isScreenShare=true;
+      });
+
       Fluttertoast.showToast(
           msg: "onStartScreenShareACK+${jsonEncode(map)}",
           toastLength: Toast.LENGTH_SHORT,
@@ -191,7 +196,10 @@ class Conference extends State<MyConfApp> {
       );
     };
     EnxRtc.onStoppedScreenShareACK=(Map<dynamic, dynamic> map){
+    setState(() {
       isScreenShare=false;
+    });
+
       Fluttertoast.showToast(
           msg: "onStoppedScreenShareACK+${jsonEncode(map)}",
           toastLength: Toast.LENGTH_SHORT,
@@ -203,9 +211,13 @@ class Conference extends State<MyConfApp> {
       );
     };
     EnxRtc.onScreenSharedStarted=(Map<dynamic, dynamic> map){
+      setState(() {
+        isScreenShare=true;
+        shareStreamId = map['streamId'];
+      });
 
       Fluttertoast.showToast(
-          msg: "onScreenSharedStarted+${jsonEncode(map)}",
+          msg: "onScreenSharedStarted+$shareStreamId",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.CENTER,
 
@@ -215,7 +227,10 @@ class Conference extends State<MyConfApp> {
       );
     };
     EnxRtc.onScreenSharedStopped=(Map<dynamic, dynamic> map){
+      setState(() {
+        isScreenShare=false;
 
+      });
       Fluttertoast.showToast(
           msg: "onScreenSharedStopped+${jsonEncode(map)}",
           toastLength: Toast.LENGTH_SHORT,
@@ -240,23 +255,19 @@ class Conference extends State<MyConfApp> {
         builder: (BuildContext context) {
           return AlertDialog(
               title: Text('Media Devices'),
-              content: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: <Widget>[
-                  Container(
-                    child: ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: deviceList.length,
-                      itemBuilder: (BuildContext context, int index) {
-                        return ListTile(
-                          title: Text(deviceList[index].toString()),
-                          onTap: () =>
-                              _setMediaDevice(deviceList[index].toString()),
-                        );
-                      },
-                    ),
-                  )
-                ],
+              content: SizedBox(
+                width: double.maxFinite,
+                child: ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: deviceList.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    return ListTile(
+                      title: Text(deviceList[index].toString()),
+                      onTap: () =>
+                          _setMediaDevice(deviceList[index].toString()),
+                    );
+                  },
+                ),
               ));
         });
   }
@@ -283,13 +294,48 @@ class Conference extends State<MyConfApp> {
     }
   }
   //For Android Screen share need foreground service
-  ReceivePort _receivePort;
+  ReceivePort? _receivePort;
 
-  Future<void> _initForegroundTask() async {
-    await FlutterForegroundTask.init(
+  Future<void> _requestPermissionForAndroid() async {
+    if (!Platform.isAndroid) {
+      return;
+    }
+
+    // "android.permission.SYSTEM_ALERT_WINDOW" permission must be granted for
+    // onNotificationPressed function to be called.
+    //
+    // When the notification is pressed while permission is denied,
+    // the onNotificationPressed function is not called and the app opens.
+    //
+    // If you do not use the onNotificationPressed or launchApp function,
+    // you do not need to write this code.
+    if (!await FlutterForegroundTask.canDrawOverlays) {
+      // This function requires `android.permission.SYSTEM_ALERT_WINDOW` permission.
+      await FlutterForegroundTask.openSystemAlertWindowSettings();
+    }
+
+    // Android 12 or higher, there are restrictions on starting a foreground service.
+    //
+    // To restart the service on device reboot or unexpected problem, you need to allow below permission.
+    if (!await FlutterForegroundTask.isIgnoringBatteryOptimizations) {
+      // This function requires `android.permission.REQUEST_IGNORE_BATTERY_OPTIMIZATIONS` permission.
+      await FlutterForegroundTask.requestIgnoreBatteryOptimization();
+    }
+
+    // Android 13 and higher, you need to allow notification permission to expose foreground service notification.
+    final NotificationPermission notificationPermissionStatus =
+    await FlutterForegroundTask.checkNotificationPermission();
+    if (notificationPermissionStatus != NotificationPermission.granted) {
+      await FlutterForegroundTask.requestNotificationPermission();
+    }
+  }
+
+  void _initForegroundTask() {
+    FlutterForegroundTask.init(
       androidNotificationOptions: AndroidNotificationOptions(
-        channelId: 'notification_channel_id',
-        channelName: 'Foreground Notification',
+        id: 500,
+        channelId: 'foreground_service',
+        channelName: 'Foreground Service Notification',
         channelDescription:
         'This notification appears when the foreground service is running.',
         channelImportance: NotificationChannelImportance.LOW,
@@ -298,42 +344,77 @@ class Conference extends State<MyConfApp> {
           resType: ResourceType.mipmap,
           resPrefix: ResourcePrefix.ic,
           name: 'launcher',
+          backgroundColor: Colors.orange,
         ),
         buttons: [
-          const NotificationButton(id: 'sendButton', text: 'Send'),
-          const NotificationButton(id: 'testButton', text: 'Test'),
+
         ],
       ),
-
-      printDevLog: true,
+      iosNotificationOptions: const IOSNotificationOptions(
+        showNotification: true,
+        playSound: false,
+      ),
+      foregroundTaskOptions: const ForegroundTaskOptions(
+        interval: 5000,
+        isOnceEvent: false,
+        autoRunOnBoot: true,
+        allowWakeLock: true,
+        allowWifiLock: true,
+      ),
     );
   }
 
   Future<bool> _startForegroundTask() async {
-    ReceivePort receivePort;
+
+
+    // Register the receivePort before starting the service.
+    final ReceivePort? receivePort = FlutterForegroundTask.receivePort;
+    final bool isRegistered = _registerReceivePort(receivePort);
+    if (!isRegistered) {
+      print('Failed to register receivePort!');
+      return false;
+    }
+
     if (await FlutterForegroundTask.isRunningService) {
-      receivePort = await FlutterForegroundTask.restartService();
+      return FlutterForegroundTask.restartService();
     } else {
-      receivePort = await FlutterForegroundTask.startService(
+      return FlutterForegroundTask.startService(
         notificationTitle: 'Foreground Service is running',
         notificationText: 'Tap to return to the app',
 
       );
     }
-    if (receivePort != null) {
-      _receivePort = receivePort;
+  }
 
-      return true;
+  Future<bool> _stopForegroundTask() {
+    return FlutterForegroundTask.stopService();
+  }
+
+  bool _registerReceivePort(ReceivePort? newReceivePort) {
+    if (newReceivePort == null) {
+      return false;
     }
 
-    return false;
+    _closeReceivePort();
+
+    _receivePort = newReceivePort;
+    _receivePort?.listen((data) {
+      if (data is int) {
+        print('eventCount: $data');
+      } else if (data is String) {
+
+      } else if (data is DateTime) {
+        print('timestamp: ${data.toString()}');
+      }
+    });
+
+    return _receivePort != null;
   }
 
-  Future<bool> _stopForegroundTask() async {
-    return await FlutterForegroundTask.stopService();
+  void _closeReceivePort() {
+    _receivePort?.close();
+    _receivePort = null;
   }
-
-
   void _toggleScreenShare() async{
 
     if (Platform.isAndroid) {
@@ -362,7 +443,7 @@ class Conference extends State<MyConfApp> {
     setState(() {
       deviceList = list;
     });
-    print('deviceList');
+    print('deviceList+${deviceList.length}');
     print(deviceList);
     createDialog();
   }
@@ -372,7 +453,7 @@ class Conference extends State<MyConfApp> {
   }
 
   int remoteView = -1;
-  List<dynamic> deviceList;
+  late List<dynamic> deviceList;
 
   Widget _viewRows() {
     return Column(
@@ -394,7 +475,7 @@ class Conference extends State<MyConfApp> {
     }
   }
 
-  final _remoteUsers = List<int>();
+  final _remoteUsers = <int>[];
 
 
   @override
@@ -405,140 +486,142 @@ class Conference extends State<MyConfApp> {
       ),
       body: Container(
         color: Colors.black,
-        child: Column(
-          children: [
-            Container(
-                alignment: Alignment.topRight,
-                height: 90,
-                width: MediaQuery.of(context).size.width,
-                child: Container(
-                  color: Colors.black,
-                  height: 100,
-                  width: 100,
-                  child: EnxPlayerWidget(0, local: true,width: 100, height: 100),
-                )),
-            Stack(
-              children: <Widget>[
-                Card(
-                  color: Colors.black,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                  alignment: Alignment.topRight,
+                  height: 90,
+                  width: MediaQuery.of(context).size.width,
                   child: Container(
-                    alignment: Alignment.bottomCenter,
-                    height: MediaQuery.of(context).size.height - 200,
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      children: <Widget>[
-                        Expanded(
-                          child: Container(
-                              child: _viewRows()
-                          ),
-                        )
-                      ],
+                    color: Colors.black,
+                    height: 100,
+                    width: 100,
+                    child: EnxPlayerWidget(0, local: true,width: 100, height: 100),
+                  )),
+              Stack(
+                children: <Widget>[
+                  Card(
+                    color: Colors.black,
+                    child: Container(
+                      alignment: Alignment.bottomCenter,
+                      height: MediaQuery.of(context).size.height - 220,
+                      width: MediaQuery.of(context).size.width,
+                      child: Column(
+                        children: <Widget>[
+                          Expanded(
+                            child: Container(
+                                child: isScreenShare?EnxPlayerWidget(int.parse(shareStreamId) , local: false,width: 300, height: 300):_viewRows()
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
-                ),
-                Positioned(
-                  bottom: 30,
-                  left: 20,
-                  right: 20,
-                  child: Container(
-                    color: Colors.white,
-                    // height: 100,
-                    width: MediaQuery.of(context).size.width,
-                    child: Row(
-                      children: [
-                        Container(
-                          width: MediaQuery.of(context).size.width / 7,
-                          child: MaterialButton(
-                            child: isAudioMuted
-                                ? Image.asset(
-                              'assets/mute_audio.png',
-                              fit: BoxFit.cover,
-                              height: 25,
-                              width: 25,
-                            )
-                                : Image.asset(
-                              'assets/unmute_audio.png',
-                              fit: BoxFit.cover,
-                              height: 25,
-                              width: 25,
+                  Positioned(
+                    bottom: 30,
+                    left: 20,
+                    right: 20,
+                    child: Container(
+                      color: Colors.white,
+                      // height: 100,
+                      width: MediaQuery.of(context).size.width,
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width / 7,
+                            child: MaterialButton(
+                              onPressed: _toggleAudio,
+                              child: isAudioMuted
+                                  ? Image.asset(
+                                'assets/mute_audio.png',
+                                fit: BoxFit.cover,
+                                height: 25,
+                                width: 25,
+                              )
+                                  : Image.asset(
+                                'assets/unmute_audio.png',
+                                fit: BoxFit.cover,
+                                height: 25,
+                                width: 25,
+                              ),
                             ),
-                            onPressed: _toggleAudio,
                           ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 7,
-                          child: MaterialButton(
-                            child: Image.asset(
-                              'assets/camera_switch.png',
-                              fit: BoxFit.cover,
-                              height: 25,
-                              width: 25,
+                          Container(
+                            width: MediaQuery.of(context).size.width / 7,
+                            child: MaterialButton(
+                              onPressed: _toggleCamera,
+                              child: Image.asset(
+                                'assets/camera_switch.png',
+                                fit: BoxFit.cover,
+                                height: 25,
+                                width: 25,
+                              ),
                             ),
-                            onPressed: _toggleCamera,
                           ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 7,
-                          child: MaterialButton(
-                            child: isVideoMuted
-                                ? Image.asset(
-                              'assets/mute_video.png',
-                              fit: BoxFit.cover,
-                              height: 25,
-                              width: 25,
-                            )
-                                : Image.asset(
-                              'assets/unmute_video.png',
-                              fit: BoxFit.cover,
-                              height: 25,
-                              width: 25,
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width / 7,
+                            child: MaterialButton(
+                              onPressed: _toggleVideo,
+                              child: isVideoMuted
+                                  ? Image.asset(
+                                'assets/mute_video.png',
+                                fit: BoxFit.cover,
+                                height: 25,
+                                width: 25,
+                              )
+                                  : Image.asset(
+                                'assets/unmute_video.png',
+                                fit: BoxFit.cover,
+                                height: 25,
+                                width: 25,
+                              ),
                             ),
-                            onPressed: _toggleVideo,
                           ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 7,
-                          child: MaterialButton(
-                            child: Image.asset(
-                              'assets/unmute_speaker.png',
-                              fit: BoxFit.cover,
-                              height: 25,
-                              width: 25,
+                          Container(
+                            width: MediaQuery.of(context).size.width / 7,
+                            child: MaterialButton(
+                              onPressed: _toggleSpeaker,
+                              child: Image.asset(
+                                'assets/unmute_speaker.png',
+                                fit: BoxFit.cover,
+                                height: 25,
+                                width: 25,
+                              ),
                             ),
-                            onPressed: _toggleSpeaker,
                           ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 7,
-                          child: MaterialButton(
-                            child: Image.asset(
-                              'assets/screenShare.png',
-                              fit: BoxFit.cover,
-                              height: 25,
-                              width: 25,
+                          Container(
+                            width: MediaQuery.of(context).size.width / 7,
+                            child: MaterialButton(
+                              onPressed: _toggleScreenShare,
+                              child: Image.asset(
+                                'assets/screenShare.png',
+                                fit: BoxFit.cover,
+                                height: 25,
+                                width: 25,
+                              ),
                             ),
-                            onPressed: _toggleScreenShare,
                           ),
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width / 7,
-                          child: MaterialButton(
-                            child: Image.asset(
-                              'assets/disconnect.png',
-                              fit: BoxFit.cover,
-                              height: 25,
-                              width: 25,
+                          Container(
+                            width: MediaQuery.of(context).size.width / 7,
+                            child: MaterialButton(
+                              onPressed: _disconnectRoom,
+                              child: Image.asset(
+                                'assets/disconnect.png',
+                                fit: BoxFit.cover,
+                                height: 25,
+                                width: 25,
+                              ),
                             ),
-                            onPressed: _disconnectRoom,
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
-            )
-          ],
+                ],
+              )
+            ],
+          ),
         ),
       ),
     );
@@ -570,10 +653,10 @@ class ActiveListModel {
   String videoaspectratio;
   String mediatype;
   bool videomuted;
-  String reason;
+
 
   ActiveListModel(this.name, this.streamId, this.clientId,
-      this.videoaspectratio, this.mediatype, this.videomuted, this.reason);
+      this.videoaspectratio, this.mediatype, this.videomuted);
 
   // convert Json to an exercise object
   factory ActiveListModel.fromJson(Map<dynamic, dynamic> json) {
@@ -586,7 +669,7 @@ class ActiveListModel {
       json['videoaspectratio'] as String,
       json['mediatype'] as String,
       json['videomuted'] as bool,
-      json['reason'] as String,
+     // json['reason'] as String,
     );
   }
 }
