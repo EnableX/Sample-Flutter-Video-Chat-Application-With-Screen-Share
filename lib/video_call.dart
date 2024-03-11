@@ -30,7 +30,7 @@ class Conference extends State<MyConfApp> {
   bool isVideoMuted = false;
   bool isScreenShare=false;
  late String streamId;
- late String shareStreamId;
+ late String shareStreamId="0";
   late String roomId;
   late String roomID;
   late String clientID;
@@ -181,9 +181,6 @@ class Conference extends State<MyConfApp> {
     };
     //
     EnxRtc.onStartScreenShareACK=(Map<dynamic, dynamic> map){
-      setState(() {
-        isScreenShare=true;
-      });
 
       Fluttertoast.showToast(
           msg: "onStartScreenShareACK+${jsonEncode(map)}",
@@ -196,9 +193,6 @@ class Conference extends State<MyConfApp> {
       );
     };
     EnxRtc.onStoppedScreenShareACK=(Map<dynamic, dynamic> map){
-    setState(() {
-      isScreenShare=false;
-    });
 
       Fluttertoast.showToast(
           msg: "onStoppedScreenShareACK+${jsonEncode(map)}",
