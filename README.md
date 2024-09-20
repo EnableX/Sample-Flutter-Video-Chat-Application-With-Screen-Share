@@ -81,12 +81,12 @@ Note the following:
 * Application Server is created using EnableX Server API while Rest API Service helps in provisioning, session access and post-session reporting.
 
 To know more about Server API, go to:
-https://www.enablex.io/developer/video-api/server-api
+https://developer.enablex.io/docs/references/apis/video-api/index/
 
 
 
 ## 3. Flutter Toolkit
-https://www.enablex.io/developer/video-api/client-api/flutter-toolkit/
+https://developer.enablex.io/docs/references/sdks/video-sdk/flutter-sdk/index/
    
 
 ## 4. Application Walk-through
@@ -96,13 +96,13 @@ https://www.enablex.io/developer/video-api/client-api/flutter-toolkit/
 We create a Token for a Room Id to get connected to EnableX Platform to connect to the Virtual Room to carry out a RTC Session.
 
 To create Token, we make use of Server API. Refer following documentation:
-https://www.enablex.io/developer/video-api/server-api/rooms-route/#create-token
+https://developer.enablex.io/docs/references/apis/video-api/content/api-routes/#create-a-token
 
 
 ### 4.2 Connect to a Room, Initiate & Publish Stream
 
 We use the Token to get connected to the Virtual Room. Once connected, we initiate local stream and publish into the room. Refer following documentation for this process:
-https://www.enablex.io/developer/video-api/client-api/flutter-toolkit/room-connection/
+https://developer.enablex.io/docs/references/sdks/video-sdk/flutter-sdk/room-connection/index/
 
 ### 4.3 To start screen share with enableX flutter plugin in flutter  IOS and android App 
   user need to add some required dependency in pubspec.yaml
