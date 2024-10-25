@@ -14,7 +14,7 @@ Visit the EnableX Developer Center at https://developer.enablex.io/ for more inf
 
 #### 1.1.1 App Id and App Key
 
-* Register with EnableX [https://portal.enablex.io/cpaas/trial-sign-up/] 
+* Register with EnableX [https://www.enablex.io/free-trial/] 
 * Create your Application
 * Get your App ID and App Key delivered to your email
 
@@ -81,7 +81,7 @@ Note the following:
 * Application Server is created using EnableX Server API while Rest API Service helps in provisioning, session access and post-session reporting.
 
 To know more about Server API, go to:
-https://developer.enablex.io/docs/references/apis/video-api/index/
+https://developer.enablex.io/docs/guides/video-guide/sample-codes/video-calling-app/#demo-application-server
 
 
 
@@ -310,6 +310,6 @@ When Screen share start then also need to start foreground service and when stop
 EnableX provides hosted Demo Application of different use-case for you to try out.
 
 1. Try a quick Video Call: https://try.enablex.io
-2. Sign up for a free trial https://portal.enablex.io/cpaas/trial-sign-up/
+2. Sign up for a free trial https://www.enablex.io/free-trial/
 
  
